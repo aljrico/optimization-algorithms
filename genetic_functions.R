@@ -6,12 +6,12 @@ noncommon <- function(par1,par2){
 }
 
 # Generate offspring (function)
-gen.offspring <- function(par1,par2, noff, seed){
+gen.offspring <- function(par1,par2, noff,nproblem, pmut){
 	for (j in 1:noff){
 		offseed <- sample(par1[noncommon(par1,par2)])
 		randomdummy <- runif(1)
-		if (randomdummy<=0.75){
-			for (i in 1:length(seed)){
+		if (randomdummy<=(1-pmut)){
+			for (i in 1:nproblem){
 
 				if (i %in% noncommon(par1,par2)) {
 					son[i] <- offseed[1]
@@ -33,11 +33,22 @@ meas.error <- function(subject){
 		x <- i
 		y <- subject[i]
 		for(j in 1:length(subject)){
-			dx <- j
-			dy <- subject[j]
+			if (i !=j){
+				dx <- j
+				dy <- subject[j]
+				if (abs(dx-x)==abs(dy-y)){error = error+1}
+			}
 
-			if (abs(dx-x)==abs(dy-y)){error = error+1}
 		}
 	}
 	return(error)
+}
+
+# Dummy crossover
+gen.offspring2 <- function(par1,par2, noff,nproblem, pmut){
+	for (j in 1:noff){
+		son <- sample(par1)
+		offspring[[j]] <- son
+	}
+	return (offspring)
 }

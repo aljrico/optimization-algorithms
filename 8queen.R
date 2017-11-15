@@ -8,6 +8,9 @@ source("genetic_functions.R")
 # Magnitude of the Problem
 nproblem <- 8
 
+# Probability of mutation
+pmut <- 0.5
+
 # Seed for generating initial parents
 seed <- seq(nproblem)
 
@@ -21,7 +24,7 @@ fitness <- c()
 max.fitness <- c()
 
 # Number of toddlers by couple
-noff <- nproblem*2
+noff <- nproblem*5
 
 # Initial parents
 par1 <- sample(seed)
@@ -33,12 +36,12 @@ b <- 0
 repeat{
 	# Measuring fitness of every child
 	for (i in 1:noff){
-		subject <- gen.offspring(par1,par2,noff,seed)[[i]]
+		subject <- gen.offspring(par1,par2,noff,nproblem, pmut)[[i]]
 		fitness[i] <- nproblem*(nproblem-1)-meas.error(subject)
 	}
 
 	# Selecting most fittest childs as new parents
-	offspring <- gen.offspring(par1,par2,noff,seed)
+	offspring <- gen.offspring(par1,par2,noff,nproblem, pmut)
 	par1 <- offspring[sort(-fitness,index.return=TRUE)[[2]][1]][[1]]
 	par2 <- offspring[sort(-fitness,index.return=TRUE)[[2]][2]][[1]]
 	max.fitness <- append(max.fitness, max(fitness))
@@ -47,6 +50,6 @@ repeat{
 
 	if (max(fitness)== nproblem*(nproblem-1)) break
 	if (length(max.fitness)> 10000) break
-	if (b > 10000) break
+	if (b > 20000) break
 }
-
+ts.plot(max.fitness)
