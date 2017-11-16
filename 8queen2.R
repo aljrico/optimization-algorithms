@@ -1,5 +1,5 @@
 
-# 8-Queen Problem using a Genetic Algorithm ---------------------------------------------------------
+# 8-Queen Problem using a Genetic Algorithm (Version 2) ---------------------------------------------------------
 # Author: Alejandro Jiménez Rico <aljrico@gmail.com>
 
 # Load functions
@@ -16,6 +16,7 @@ seed <- seq(nproblem)
 
 # List to be filled
 offspring <- list()
+population <- list()
 
 # Arrays to be filled
 son <- c()
@@ -24,12 +25,12 @@ fitness <- c()
 max.fitness <- c()
 
 # Number of toddlers by couple
-noff <- nproblem*5
+noff <- nproblem
 
-# Initial parents
-par1 <- sample(seed)
-par2 <- sample(seed)
-
+# Initial population
+for(i in 1:noff){
+	population[[i]] <- sample(seq(1:nproblem))
+}
 
 b <- 0
 # Creating further population ---------------------------------------------------

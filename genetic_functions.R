@@ -46,9 +46,30 @@ meas.error <- function(subject){
 
 # Dummy crossover
 gen.offspring2 <- function(par1,par2, noff,nproblem, pmut){
-	for (j in 1:noff){
-		son <- sample(par1)
-		offspring[[j]] <- son
+	i <- 1
+	repeat{
+		np <-  length(par1)
+		nc <- sample(seq(1:np), 3)
+		rpar1 <- par1[-nc]
+		rpar2 <- par2[-nc]
+		rndm1 <- runif(1)
+		rndm2 <- runif(1)
+
+		if(rndm1>=0.5){
+			for(j in 1:np){
+				if (j %in% nc) {son[j] <- par1[nc[1]]; nc[-1]}
+				else {son[j] <- sample(rpar1, 1); rpar1[-1]}
+			}
+		}
+		if(rndm1<0.5){
+			for(j in 1:np){
+				if (j %in% nc) {son[j] <- par2[nc[1]]; nc[-1]}
+				else {son[j] <- sample(rpar2, 1); rpar2[-1]}
+			}
+		}
+		offspring[[i]] <- son
+		i <- i + 1
+		if (length(offspring) >= noff) break
 	}
 	return (offspring)
 }
