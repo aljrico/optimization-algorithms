@@ -11,7 +11,7 @@ nproblem <- 8
 # Probability of mutation
 pmut <- 0.1
 
-# Mortality and maxpopulation multiplicator
+# Mortality
 mort <- 0.9
 
 # Seed for generating initial parents
