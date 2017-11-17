@@ -6,7 +6,7 @@ noncommon <- function(par1,par2){
 }
 
 # Generate offspring (function)
-gen.offspring <- function(par1,par2, noff,nproblem, pmut){
+gen.offspring <- function(par1,par2, noff, pmut){
 	for (j in 1:noff){
 		offseed <- sample(par1[noncommon(par1,par2)])
 		randomdummy <- runif(1)

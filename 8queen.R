@@ -36,7 +36,7 @@ b <- 0
 repeat{
 	# Measuring fitness of every child
 	for (i in 1:noff){
-		offspring[[i]] <- gen.offspring(par1,par2,noff,nproblem, pmut)[[i]]
+		offspring[[i]] <- gen.offspring(par1,par2,noff, pmut)[[i]]
 		subject <- offspring[[i]]
 		fitness[i] <- (1/(1+meas.error(subject)))
 	}
