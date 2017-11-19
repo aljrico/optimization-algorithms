@@ -5,17 +5,19 @@
 # Load functions
 source("genetic_functions.R")
 
+# Define Variables --------------------------------------------------------
+
+# Number of toddlers by couple
+noff <- 5
+
 # Magnitude of the Problem
-nproblem <- 8
+nproblem <- 10
 
 # Probability of mutation
 pmut <- 0.1
 
 # Mortality
-mort <- 0.9
-
-# Seed for generating initial parents
-seed <- seq(nproblem)
+mort <- 0.5
 
 # List to be filled
 offspring <- list()
@@ -26,21 +28,23 @@ son <- c()
 subject <- c()
 fitness <- c()
 av.fitness <- c()
+max.fitness <- c()
 
-# Number of toddlers by couple
-noff <- 3
+# Count Variables
+b <- 0
 
-# Initial population
+# Initial Population ------------------------------------------------------
+
 for(i in 1:nproblem){
 	population[[i]] <- sample(seq(1:nproblem))
 }
 
-
 # Reproduction ---------------------------------------------------
-b <- 0
+
 repeat{
 	m <- 1
 	while(length(population)>1){
+		# Selecting parents from population
 		par1 <- population[[1]]; population <- population[-1]
 		par2 <- population[[1]]; population <- population[-1]
 
@@ -52,14 +56,19 @@ repeat{
 			m <- m+1
 		}
 	}
+
+	# Performance measures
 	av.fitness <- append(av.fitness, mean(fitness))
+	max.fitness <- append(max.fitness, max(fitness))
+
+	# Get the most fittest individual
 	bestguy <- offspring[max(fitness,index.return=TRUE)]
 	if (max(fitness) == 1) break
-	population <- list()
+
+	population <- list() # Kill all parents
 
 	# Populating the new world
-
-	a <- round((length(offspring)*0.5)/mort)*2
+	a <- round(length(offspring)*(1-mort)*0.5)*2
 	k <- 1
 	while (length(offspring) != 0){
 		population[[k]] <- offspring[[max(fitness,index.return=TRUE)]]
@@ -69,10 +78,10 @@ repeat{
 		if(k > a) break
 	}
 	b <- b+1
-	offspring <- list()
+	offspring <- list() # Kill all children not fitted enough
 
 	if (b > 5000) break
 
 }
-ts.plot(av.fitness)
+ts.plot(as.ts(max.fitness))
 bestguy
