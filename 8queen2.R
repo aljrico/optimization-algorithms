@@ -11,7 +11,7 @@ source("genetic_functions.R")
 noff <- 5
 
 # Magnitude of the Problem
-nproblem <- 10
+nproblem <- 8
 
 # Probability of mutation
 pmut <- 0.1
@@ -32,6 +32,7 @@ max.fitness <- c()
 
 # Count Variables
 b <- 0
+ind <- 0
 
 # Initial Population ------------------------------------------------------
 
@@ -43,6 +44,7 @@ for(i in 1:nproblem){
 
 repeat{
 	m <- 1
+	ind <- ind + length(population)
 	while(length(population)>1){
 		# Selecting parents from population
 		par1 <- population[[1]]; population <- population[-1]
@@ -65,7 +67,9 @@ repeat{
 	bestguy <- offspring[max(fitness,index.return=TRUE)]
 	if (max(fitness) == 1) break
 
-	population <- list() # Kill all parents
+	# Kill all parents
+	population <- list()
+	rm(par1,par2)
 
 	# Populating the new world
 	a <- round(length(offspring)*(1-mort)*0.5)*2
@@ -81,7 +85,14 @@ repeat{
 	offspring <- list() # Kill all children not fitted enough
 
 	if (b > 5000) break
-
+	if (length(population)<2){
+		print("EXTINCTION")
+		break
+	}
 }
-ts.plot(as.ts(max.fitness))
+
+# Print results
+par()
+ts.plot(as.ts(max.fitness), xlab="Generations", ylab="Fitness")
 bestguy
+ind
