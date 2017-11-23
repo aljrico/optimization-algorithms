@@ -28,3 +28,14 @@ def gen_offspring(par1,par2,noff,pmut):
 
 
 # Measuring Fitness
+def meas_error(subject):
+	error = 0
+	for i in range(0,len(subject)-1):
+		x = i+1
+		y = subject[i]
+		for j in range(0, len(subject)):
+			dx = j+1
+			dy = subject[j]
+			if((dx-x)^2 == (dy-y)^2):
+				error = error + 1
+	return error

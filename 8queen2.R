@@ -11,10 +11,10 @@ source("genetic_functions.R")
 noff <- 5
 
 # Magnitude of the Problem
-nproblem <- 8
+nproblem <- 10
 
 # Probability of mutation
-pmut <- 0.1
+pmut <- 0.01
 
 # Mortality
 mort <- 0.5
