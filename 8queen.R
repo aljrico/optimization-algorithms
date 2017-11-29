@@ -6,7 +6,7 @@
 source("genetic_functions.R")
 
 # Magnitude of the Problem
-nproblem <- 8
+nproblem <- 10
 
 # Probability of mutation
 pmut <- 0.3

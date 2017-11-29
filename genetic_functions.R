@@ -44,32 +44,35 @@ meas.error <- function(subject){
 	return(error)
 }
 
-# Dummy crossover
-gen.offspring2 <- function(par1,par2, noff,nproblem, pmut){
-	i <- 1
-	repeat{
-		np <-  length(par1)
-		nc <- sample(seq(1:np), 3)
-		rpar1 <- par1[-nc]
-		rpar2 <- par2[-nc]
-		rndm1 <- runif(1)
-		rndm2 <- runif(1)
+kill <- function(population){
+	newpopulation <- list()
+	b <- length(population)
+	a <- 1
+	while(a < b & length(population)>1){
+		w1 <- population[[1]] ; population <- population[-1]
+		w2 <- population[[1]] ; population <- population[-1]
 
-		if(rndm1>=0.5){
-			for(j in 1:np){
-				if (j %in% nc) {son[j] <- par1[nc[1]]; nc[-1]}
-				else {son[j] <- sample(rpar1, 1); rpar1[-1]}
-			}
-		}
-		if(rndm1<0.5){
-			for(j in 1:np){
-				if (j %in% nc) {son[j] <- par2[nc[1]]; nc[-1]}
-				else {son[j] <- sample(rpar2, 1); rpar2[-1]}
-			}
-		}
-		offspring[[i]] <- son
-		i <- i + 1
-		if (length(offspring) >= noff) break
+		newpopulation[[a]] <- fight(w1,w2)
+		a <- a+1
 	}
-	return (offspring)
+	return(newpopulation)
+}
+
+
+fight <- function(w1, w2){
+	e1 <- meas.error(w1)
+	e2 <- meas.error(w2)
+
+	if(e1 > e2) {
+		a <- runif(1)
+		if(a < 0.85) vic <- w2
+		else  vic <- w1
+	}
+	if(e1< e2){
+		a <- runif(1)
+		if(a< 0.85) vic <- w1
+		else vic <- w2
+	}
+	if(e1 == e2) vic <- gen.offspring (w1,w2,1,0)[[1]]
+	return(vic)
 }

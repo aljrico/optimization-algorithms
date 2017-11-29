@@ -1,5 +1,5 @@
 
-# 8-Queen Problem using a Genetic Algorithm (Version 2) ---------------------------------------------------------
+# 8-Queen Problem using a Genetic Algorithm (Version 3) ---------------------------------------------------------
 # Author: Alejandro Jiménez Rico <aljrico@gmail.com>
 
 # Load functions
@@ -35,7 +35,7 @@ b <- 0
 ind <- 0
 
 # Initial Population ------------------------------------------------------
-ipop <- (nproblem)^2
+ipop <- (nproblem)^2*2
 for(i in 1:ipop){
 	population[[i]] <- sample(seq(1:nproblem))
 }
@@ -45,52 +45,45 @@ for(i in 1:ipop){
 repeat{
 	m <- 1
 	ind <- ind + length(population)
-	while(length(population)>1){
-		# Selecting parents from population
-		par1 <- population[[1]]; population <- population[-1]
-		par2 <- population[[1]]; population <- population[-1]
 
-		# Measuring fitness of every child
-		for (i in 1:noff){
-			offspring[[m]] <- gen.offspring(par1,par2,noff,pmut)[[i]]
-			subject <- offspring[[m]]
-			fitness[m] <- (1/(1+meas.error(subject)))
-			m <- m+1
-		}
+	# Measuring fitness of every member of the population for statistical purposes
+	for (i in 1:length(population)){
+		subject <- population[[i]]
+		fitness[i] <- (1/(1+meas.error(subject)))
 	}
+
 
 	# Performance measures
 	av.fitness <- append(av.fitness, mean(fitness))
 	max.fitness <- append(max.fitness, max(fitness))
 
 	# Get the most fittest individual
-	bestguy <- offspring[max(fitness,index.return=TRUE)]
+	bestguy <- population[max(fitness,index.return=TRUE)]
 	if (max(fitness) == 1) {
 		print <- 'SUCCESS!'
 		break
 	}
 
-	# Kill all parents
-	population <- list()
-	rm(par1,par2)
-
 	# Populating the new world
-	a <- round(length(offspring)*(1-mort)*0.5)*2
-	k <- 1
-	while (length(offspring) != 0){
-		population[[k]] <- offspring[[max(fitness,index.return=TRUE)]]
-		fitness <- fitness[-max(fitness,index.return=TRUE)]
-		offspring <- offspring[-max(fitness,index.return=TRUE)]
-		k <- k +1
-		if(k > a) break
-	}
+	population <- kill(population)
 	b <- b+1
-	offspring <- list() # Kill all children not fitted enough
+
+	while(length(population)>1){
+		# Selecting parents from population
+		par1 <- population[[1]]; population <- population[-1]
+		par2 <- population[[1]]; population <- population[-1]
+		for(i in 1:noff){
+			offspring[[m]] <- gen.offspring(par1,par2,noff,pmut)[[i]]
+		}
+		m <- m+1
+	}
+
+	population <- offspring
 
 	if (b > 5000) {
 		print <- "FAILURE"
 		break
-		}
+	}
 	if (length(population)<2){
 		print <- 'EXTINCTION'
 		break
