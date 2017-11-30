@@ -11,10 +11,10 @@ source("genetic_functions.R")
 noff <- 4
 
 # Magnitude of the Problem
-nproblem <- 10
+nproblem <- 11
 
 # Probability of mutation
-pmut <- 0.01
+pmut <- 0.5
 
 # Mortality
 mort <- 0.5
@@ -35,7 +35,7 @@ b <- 0
 ind <- 0
 
 # Initial Population ------------------------------------------------------
-ipop <- (nproblem)^2
+ipop <- (nproblem)^2*2
 for(i in 1:ipop){
 	population[[i]] <- sample(seq(1:nproblem))
 }
@@ -99,7 +99,7 @@ repeat{
 
 # Print results
 par()
-ts.plot(as.ts(max.fitness), xlab="Generations", ylab="Fitness")
+ts.plot(as.ts(av.fitness), xlab="Generations", ylab="Fitness")
 bestguy[[1]]
 ind
 print

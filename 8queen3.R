@@ -8,7 +8,7 @@ source("genetic_functions.R")
 # Define Variables --------------------------------------------------------
 
 # Number of toddlers by couple
-noff <- 4
+noff <- 5
 
 # Magnitude of the Problem
 nproblem <- 10
@@ -64,8 +64,8 @@ repeat{
 		break
 	}
 
-	# Populating the new world
-	population <- kill(population)
+	# Killing festivity
+	population <- kill(population,pmut,mort)
 	b <- b+1
 
 	while(length(population)>1){

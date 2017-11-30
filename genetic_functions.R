@@ -44,35 +44,35 @@ meas.error <- function(subject){
 	return(error)
 }
 
-kill <- function(population){
+kill <- function(population,pmut,mort){
 	newpopulation <- list()
 	b <- length(population)
 	a <- 1
 	while(a < b & length(population)>1){
-		w1 <- population[[1]] ; population <- population[-1]
-		w2 <- population[[1]] ; population <- population[-1]
+		w1 <- sample(population,1)[[1]]
+		w2 <- sample(population,1)[[1]]
 
-		newpopulation[[a]] <- fight(w1,w2)
+		newpopulation[[a]] <- fight(w1,w2,pmut,mort)
 		a <- a+1
 	}
 	return(newpopulation)
 }
 
 
-fight <- function(w1, w2){
+fight <- function(w1, w2,pmut,mort){
 	e1 <- meas.error(w1)
 	e2 <- meas.error(w2)
 
 	if(e1 > e2) {
 		a <- runif(1)
-		if(a < 0.85) vic <- w2
-		else  vic <- w1
+		if(a < mort) vic <- w2
+		else  vic <- gen.offspring (w1,w2,1,pmut)[[1]]
 	}
 	if(e1< e2){
 		a <- runif(1)
-		if(a< 0.85) vic <- w1
-		else vic <- w2
+		if(a< mort) vic <- w1
+		else vic <- gen.offspring (w1,w2,1,pmut)[[1]]
 	}
-	if(e1 == e2) vic <- gen.offspring (w1,w2,1,0)[[1]]
+	if(e1 == e2) vic <- gen.offspring (w1,w2,1,pmut)[[1]]
 	return(vic)
 }
