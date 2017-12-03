@@ -11,6 +11,7 @@
 library(reshape)
 library(ggplot2)
 library(viridis)
+library(dplyr)
 
 
 # Tournament Model --------------------------------------------------------
@@ -255,10 +256,10 @@ results <- list()
 ind <- c()
 nqueens <- c()
 mutate <- c()
-ite <- 50
+ite <- 10
 data.list <- list()
 pmuts <- c(0.01,0.05,0.1,0.25,0.5,0.75,0.9,1)
-lnq <- c(6,8)
+lnq <- c(6,8,9,10,11,12)
 
 
 
@@ -272,9 +273,13 @@ for(k in 1:length(lnq))	{
 			ind [i] <- tournament(nproblem,noff,pmut,mort)
 			nqueens[i] <- nproblem
 			mutate[i] <- pmut
-			print(i,j,k)
+			model = "tourn"
+			print("tourn")
+			print(i)
+			print(nproblem)
+			print(pmut)
 		}
-		d1 <- data.frame(ind,nqueens,mutate)
+		d1 <- data.frame(ind,nqueens,mutate,model)
 		data.list[[j + length(pmuts)*(k-1)]] <- d1
 	}
 }
@@ -301,9 +306,13 @@ for(k in 1:length(lnq))	{
 			ind [i] <- half(nproblem,noff,pmut,mort)
 			nqueens[i] <- nproblem
 			mutate[i] <- pmut
-			print(i,j,k)
+			model <- "half"
+			print("half")
+			print(i)
+			print(nproblem)
+			print(pmut)
 		}
-		d1 <- data.frame(ind,nqueens,mutate)
+		d1 <- data.frame(ind,nqueens,mutate, model)
 		data.list[[j + length(pmuts)*(k-1)]] <- d1
 	}
 }
@@ -321,6 +330,8 @@ ggplot(dat.half, aes(x=as.factor(nqueens), y = ind, colour = as.factor(mutate)))
 
 # Evaluation of Kill All But Two Model ------------------------------------------------
 
+pmuts <- c(0.1,0.25,0.5,0.75,0.9,1)
+
 for(k in 1:length(lnq))	{
 	nproblem <- lnq[k]
 	for(j in 1:length(pmuts)){
@@ -329,33 +340,25 @@ for(k in 1:length(lnq))	{
 			ind[i] <- allbut2(nproblem,noff,pmut)
 			nqueens[i] <- nproblem
 			mutate[i] <- pmut
+			model <- "allbut2"
+			print("allbut2")
 			print(i)
-			print(j)
-			print(k)
+			print(nproblem)
+			print(pmut)
 		}
-		d1 <- data.frame(ind,nqueens,mutate)
+		d1 <- data.frame(ind,nqueens,mutate, model)
 		data.list[[j + length(pmuts)*(k-1)]] <- d1
 	}
 }
 
 dat.allbut2 <- do.call(rbind, data.list)
 
+
+
+
 # Save data
-
-write.csv(dat.allbut2, file = "allbut2.csv")
-write.csv(dat.half, file = "half.csv")
-write.csv(dat.tourn, file = "tourn.csv")
-
-
-
-
-ggplot(dat.allbut2, aes(x=as.factor(mutate), y = ind, fill = as.factor(mutate))) +
-	geom_violin(bw=800, scale="area") +
-	stat_summary(fun.y=mean, geom="point", size=2) +
-	scale_fill_viridis(discrete=TRUE)
-
-ggplot(dat.allbut2, aes(x=as.factor(nqueens), y = ind, colour = as.factor(mutate))) +
-	geom_jitter() +
-	scale_colour_viridis(discrete=TRUE)
+write.csv(dat.allbut2, file = "allbut2.csv",row.names = FALSE)
+write.csv(dat.half, file = "half.csv",row.names=FALSE)
+write.csv(dat.tourn, file = "tourn.csv", row.names=FALSE)
 
 
