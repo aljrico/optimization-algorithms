@@ -33,7 +33,17 @@ df <- as.data.frame(rbind(raw.data, half.data))
 # Violin Plots ------------------------------------------------------------
 
 df %>%
+	filter() %>%
+	filter(mutate != 0.01 & mutate != 0.05) %>%
+	ggplot(aes(x=as.factor(mutate), y = log(ind), fill = as.factor(mutate))) +
+	geom_violin(bw=0.5, scale="area") +
+	stat_summary(fun.y=mean, geom="point", size=2) +
+	scale_fill_viridis(discrete=TRUE)
+
+
+df %>%
 	filter(model == "allbut2") %>%
+	filter(mutate != 0.01 & mutate != 0.05) %>%
 	ggplot(aes(x=as.factor(mutate), y = log(ind), fill = as.factor(mutate))) +
 		geom_violin(bw=0.5, scale="area") +
 		stat_summary(fun.y=mean, geom="point", size=2) +
@@ -42,7 +52,7 @@ df %>%
 df %>%
 	filter(model == "tourn") %>%
 	ggplot(aes(x=as.factor(mutate), y = log(ind), fill = as.factor(mutate))) +
-	geom_violin(bw=0.5, scale="area") +
+	geom_violin(bw=0.15, scale="area") +
 	stat_summary(fun.y=mean, geom="point", size=2) +
 	scale_fill_viridis(discrete=TRUE)
 
@@ -65,23 +75,55 @@ df %>%
 	geom_violin(bw=1, scale="area") +
 	scale_fill_viridis(discrete=TRUE)
 
+df %>%
+	filter(mutate != 0.01 & mutate != 0.05) %>%
+	ggplot(aes(x=as.factor(nqueens), y = log(ind), fill = as.factor(model))) +
+	geom_violin(bw=0.45, scale="area") +
+	scale_fill_viridis(discrete=TRUE)+
+	labs(x = "Number of Queens", y = "Log(Individuals)", fill = "Model used") +
+	theme(panel.grid.major = element_line(colour="grey"))
+
+df %>%
+	filter(model == "half") %>%
+	ggplot(aes(x=as.factor(nqueens), y = log(ind), fill = as.factor(nqueens))) +
+	geom_violin(bw=0.085, scale="area") +
+	scale_fill_viridis(discrete=TRUE)
+
+df %>% # Used
+	filter() %>%
+	ggplot(aes(x=as.factor(nqueens), y = log(ind), fill = as.factor(nqueens))) +
+	geom_violin(bw=0.2, scale="area") +
+	scale_fill_viridis(discrete=TRUE) +
+	labs(x = "Number of Queens", y = "Log(Individuals)") +
+	theme(legend.position="none", panel.grid.major = element_line(colour="grey"))
+
 # Points Plots ------------------------------------------------------------
 
 df %>%
-	filter(model == "allbut2") %>%
-	ggplot(aes(x=as.factor(nqueens), y = log(ind), colour = as.factor(mutate))) +
+	filter() %>%
+	ggplot(aes(x=as.factor(mutate), y = log(ind), colour = as.factor(model))) +
 	geom_jitter() +
-	scale_colour_viridis(discrete=TRUE)
+	scale_colour_viridis(discrete=TRUE) +
+	labs(x = "Probabilty of Mutation", y = "Log(Individuals)", colour = "Model") +
+	theme(panel.grid.major = element_line(colour="grey"))
 
-df %>%
+df %>% # Used
 	filter() %>%
 	ggplot(aes(x=as.factor(nqueens), y = log(ind), colour = as.factor(model))) +
 	geom_jitter() +
-	scale_colour_viridis(discrete=TRUE)
+	scale_colour_viridis(discrete=TRUE) +
+	labs(x = "Number of Queens", y = "Log(Individuals)", colour = "Model") +
+	theme(panel.grid.major = element_line(colour="grey"))
 
 df %>%
 	filter(model == "half") %>%
 	ggplot(aes(x=as.factor(nqueens), y = log(ind), colour = as.factor(mutate))) +
+	geom_jitter() +
+	scale_colour_viridis(discrete=TRUE)
+
+df %>%
+	filter(mutate !=0.01 & mutate !=0.05) %>%
+	ggplot(aes(x=as.factor(mutate), y = log(ind), colour = as.factor(model))) +
 	geom_jitter() +
 	scale_colour_viridis(discrete=TRUE)
 
@@ -89,8 +131,8 @@ df %>%
 # Histograms and Heatmaps--------------------------------------------------------------
 
 df %>%
-	filter(model == "half") %>%
-	ggplot(aes(x=ind, fill = as.factor(nqueens))) +
+	filter() %>%
+	ggplot(aes(x=log(ind), fill = as.factor(model))) +
 	geom_histogram() +
 	scale_fill_viridis(discrete=TRUE)
 
@@ -100,10 +142,15 @@ df %>%
 	geom_tile(aes(fill=log(ind))) +
 	scale_fill_viridis(discrete=FALSE)
 
+df %>%
+	filter(mutate != 0.01 & mutate != 0.05) %>%
+	ggplot(aes(x=as.factor(nqueens),y=model)) +
+	geom_tile(aes(fill=log(ind))) +
+	scale_fill_viridis(discrete=FALSE)
 
 df %>%
 	filter() %>%
-	ggplot(aes(x=nqueens,y=model)) +
+	ggplot(aes(x=as.factor(nqueens),y=as.factor(mutate))) +
 	geom_tile(aes(fill=log(ind))) +
 	scale_fill_viridis(discrete=FALSE)
 

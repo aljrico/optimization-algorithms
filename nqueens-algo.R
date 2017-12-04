@@ -256,10 +256,10 @@ results <- list()
 ind <- c()
 nqueens <- c()
 mutate <- c()
-ite <- 10
+ite <- 25
 data.list <- list()
 pmuts <- c(0.01,0.05,0.1,0.25,0.5,0.75,0.9,1)
-lnq <- c(6,8,9,10,11,12)
+lnq <- c(4,5,6,7,8,9,10,11,12)
 
 
 

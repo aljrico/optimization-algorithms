@@ -4,6 +4,8 @@
 
 # Load functions
 source("genetic_functions.R")
+library(ggplot2)
+library(viridis)
 
 # Define Variables --------------------------------------------------------
 
@@ -11,13 +13,13 @@ source("genetic_functions.R")
 noff <- 4
 
 # Magnitude of the Problem
-nproblem <- 11
+nproblem <- 13
 
 # Probability of mutation
-pmut <- 0.5
+pmut <- 0.1
 
 # Mortality
-mort <- 0.5
+mort <- 0.45
 
 # List to be filled
 offspring <- list()
@@ -103,3 +105,28 @@ ts.plot(as.ts(av.fitness), xlab="Generations", ylab="Fitness")
 bestguy[[1]]
 ind
 print
+
+time <- as.data.frame(cbind(av.fitness,max.fitness))
+time$gen <- as.numeric(rownames(time))
+
+time <- melt(time, id = "gen")
+
+time$lol[time$variable == "av.fitness"] <- "Average Population"
+time$lol[time$variable == "max.fitness"] <- "Best Individual"
+
+labels_names <- list(
+	max.fitness="Best Individual",
+	av.fitness="Average Population"
+)
+
+ggplot(time, aes ( y = value, x = gen, group = lol, colour = variable)) +
+	geom_line(size = 1) +
+	facet_grid( lol ~ ., scales = "free") +
+	scale_colour_viridis(discrete=TRUE, begin = 0, end = 0.7, option = "A") +
+	labs(x = "Number of Generations", y = "Fitness Value") +
+	theme(
+		legend.position = "none",
+		strip.text.y = element_text(size = 12, face = "bold"),
+		strip.background = element_rect(colour="black", fill = "grey"),
+		panel.grid.major = element_line(colour="grey")
+	)
