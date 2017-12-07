@@ -80,7 +80,7 @@ tournament <- function(nproblem,noff,pmut,mort){
 
 		population <- offspring
 
-		if (b > 5000) {
+		if (b > 50000) {
 			print <- "FAILURE"
 			break
 		}
@@ -164,7 +164,7 @@ half <- function(nproblem,noff,pmut,mort){
 		b <- b+1
 		offspring <- list() # Kill all children not fitted enough
 
-		if (b > 5000) {
+		if (b > 50000) {
 			print <- "FAILURE"
 			break
 		}
@@ -224,7 +224,7 @@ allbut2 <- function(nproblem,noff,pmut){
 		b <- b+1
 
 		if (max(fitness)== nproblem*(nproblem-1)) break
-		if (b > 5000) break
+		if (b > 50000) break
 		if (max(fitness) == 1) break
 	}
 	return("ind" = ind)
@@ -236,9 +236,9 @@ allbut2 <- function(nproblem,noff,pmut){
 # Evaluation --------------------------------------------------------------
 
 nproblem <- 8
-noff <- 5
+noff <- 4
 pmut <- 0.01
-mort <- 0.85
+mort <- 0.5
 
 # List to be filled
 offspring <- list()
@@ -259,7 +259,7 @@ mutate <- c()
 ite <- 25
 data.list <- list()
 pmuts <- c(0.01,0.05,0.1,0.25,0.5,0.75,0.9,1)
-lnq <- c(4,5,6,7,8,9,10,11,12)
+lnq <- c(4,5,7)
 
 
 
@@ -357,6 +357,7 @@ dat.allbut2 <- do.call(rbind, data.list)
 
 
 # Save data
+
 write.csv(dat.allbut2, file = "allbut2.csv",row.names = FALSE)
 write.csv(dat.half, file = "half.csv",row.names=FALSE)
 write.csv(dat.tourn, file = "tourn.csv", row.names=FALSE)
