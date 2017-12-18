@@ -16,14 +16,14 @@ raw.data <- fread("data/content-data.dat")
 
 # Parameters and variables --------------------------------------------------------------
 
-temp.min <- 1
-temp.max <- 400000
+temp.max <- 50
 values <- raw.data$values
 weights <- raw.data$weights
 ind.s <- c()
 ind <- seq(from =1, to = 1, length.out= length(values))
 t <- c()
 p <- c()
+sol <- c()
 ite <- 100000
 # Calculating value --------------------------------------------------------------
 
@@ -49,8 +49,8 @@ move <- function() {
 # Simulation --------------------------------------------------------------
 
 for(j in 1:ite){
-	#temp <- temp.max*(tanh(-log(j)+5) +1)
-	temp <- temp.max/((log(j^2+1)))
+	temp <- temp.max*(tanh(-log(j)+10) +1)*0.5
+	#temp <- temp.max/((j^(1/3)))
 	t[j] <- temp
 	ind.s <- sapply(ind, function(x) x + move())
 	ind[ind<0] <- 0
@@ -59,6 +59,7 @@ for(j in 1:ite){
 	p[j] <- pr
 	a <- runif(1)
 	if(a < pr) ind <- ind.s
+	sol[j] <- value(ind,values,weights)
 }
 
 
