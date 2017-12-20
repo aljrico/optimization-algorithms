@@ -16,7 +16,7 @@ raw.data <- fread("data/content-data.dat")
 
 # Parameters and variables --------------------------------------------------------------
 
-temp.max <- 50
+temp.max <- 100
 values <- raw.data$values
 weights <- raw.data$weights
 ind.s <- c()
@@ -24,7 +24,7 @@ ind <- seq(from =1, to = 1, length.out= length(values))
 t <- c()
 p <- c()
 sol <- c()
-ite <- 100000
+ite <- 1000000
 # Calculating value --------------------------------------------------------------
 
 value <- function(ind, values, weights){
@@ -46,7 +46,7 @@ move <- function() {
 }
 
 
-# Simulation --------------------------------------------------------------
+# Model 1 --------------------------------------------------------------
 
 for(j in 1:ite){
 	temp <- temp.max*(tanh(-log(j)+10) +1)*0.5
@@ -63,6 +63,26 @@ for(j in 1:ite){
 }
 
 
+# Model 2 -----------------------------------------------------------------
+
+for(j in 1:ite){
+	temp <- temp.max*(tanh(-log(j)+10) +1)*0.5
+	t[j] <- temp
+	ind.s <- ind
+
+	for(m in 1:4){
+		b <- sample(1:length(ind),1)
+		ind.s[b] <- ind[b] + move()
+	}
+
+	ind[ind<0] <- 0
+	ind.s[ind.s<0] <- 0
+	pr <- exp(-(value(ind,values,weights)-value(ind.s,values,weights))/temp)
+	p[j] <- pr
+	a <- runif(1)
+	if(a < pr) ind <- ind.s
+	sol[j] <- value(ind,values,weights)
+}
 
 # Results -----------------------------------------------------------------
 
@@ -71,3 +91,4 @@ ind
 
 sum(ind*weights)
 plot(t)
+plot(sol[sol>1])
