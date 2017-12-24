@@ -19,11 +19,12 @@ temp.max <- 100
 values <- raw.data$values
 weights <- raw.data$weights
 ind.s <- c()
-ind <- seq(from =1, to = 1, length.out= length(values))
+ind <- sample(c(1,0), length(values), replace = TRUE)
 t <- c()
 p <- c()
 sol <- c()
-ite <- 500000
+ite <- 1000000
+
 # Calculating value --------------------------------------------------------------
 
 value <- function(ind, values, weights){
@@ -38,22 +39,21 @@ value <- function(ind, values, weights){
 
 move <- function() {
 	a <- runif(1)
-	if(a<=0.33) {sum <- -1
-	} else if(a <=0.66) {sum <- 0
+	if(a<=0.5) {sum <- 0
 	} else sum <- 1
 	return (sum)
 }
 
-# Simulation -----------------------------------------------------------------
+# Simulation  -----------------------------------------------------------------
 
 for(j in 1:ite){
 	temp <- temp.max*(tanh(-log(j)+11) +1)*0.5
 	t[j] <- temp
 	ind.s <- ind
 
-	for(m in 1:3){
+	for(m in 1:5){
 		b <- sample(1:length(ind),1)
-		ind.s[b] <- ind[b] + move()
+		ind.s[b] <- move()
 	}
 
 	ind[ind<0] <- 0
@@ -65,7 +65,6 @@ for(j in 1:ite){
 	sol[j] <- value(ind,values,weights)
 }
 
-# Results -----------------------------------------------------------------
 
 value(ind,values,weights)
 ind
