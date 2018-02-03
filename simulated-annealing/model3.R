@@ -1,4 +1,4 @@
-# Truck Content (Model 2) -----------------------------------------------------------
+# Truck Content -----------------------------------------------------------
 
 # Library -----------------------------------------------------------------
 
@@ -33,9 +33,8 @@ ite <- 500000
 # Movement
 move <- function() {
 	a <- runif(1)
-	if(a<=0.33) {sum <- -1
-	} else if(a<=0.66){sum <- 1
-	} else sum <- 0
+	if(a<=0.5) {sum <- 0
+	} else sum <- 1
 	return (sum)
 }
 
@@ -57,7 +56,6 @@ value <- function(ind, values, weights){
 }
 
 
-
 # Simulation  -----------------------------------------------------------------
 
 for(j in 1:ite){
@@ -65,32 +63,22 @@ for(j in 1:ite){
 	t[j] <- temp
 	ind.s <- ind
 
-	# Making random changes
 	for(m in 1:5){
 		b <- sample(1:length(ind),1)
-		ind.s[b] <- ind.s[b] + move()
+		ind.s[b] <- move()
 	}
 
-	# Correcting negative values
-	ind[ind<0] <- 0
-	ind.s[ind.s<0] <- 0
-
-	# Computing value of our soultion and the new candidate
 	oldv <- value(ind,values,weights)
 	newv <- value(ind.s,values,weights)
 
 	if(oldv < newv) {
 		pr <- 1
-	}else{
+		}else{
 		pr <- exp(-(oldv-newv)/temp)
-	}
-
-	# Adopting new solution, if necessary
+		}
+	p[j] <- pr
 	a <- runif(1)
 	if(a < pr) ind <- ind.s
-
-	# Storing results
-	p[j] <- pr
 	sol[j] <- value(ind,values,weights)
 }
 
@@ -140,4 +128,3 @@ dfplot %>%
 	labs(x = "Time Steps", y = "Temperature") +
 	theme_bw() +
 	theme(legend.position = "none")
-
