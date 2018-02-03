@@ -6,6 +6,7 @@ library(ggplot2)
 library(tidyverse)
 library(dplyr)
 library(data.table)
+library(viridis)
 
 
 # Gather Data -------------------------------------------------------------
@@ -23,7 +24,7 @@ ind <- sample(c(1,0), length(values), replace = TRUE)
 t <- c()
 p <- c()
 sol <- c()
-ite <- 1000000
+ite <- 500000
 
 # Calculating value --------------------------------------------------------------
 
@@ -44,6 +45,17 @@ move <- function() {
 	return (sum)
 }
 
+
+# Moving Average ----------------------------------------------------------
+
+ma <- function(arr, n=100){
+	res = arr
+	for(i in n:length(arr)){
+		res[i] = mean(arr[(i-n):i])
+	}
+	res
+}
+
 # Simulation  -----------------------------------------------------------------
 
 for(j in 1:ite){
@@ -56,9 +68,14 @@ for(j in 1:ite){
 		ind.s[b] <- move()
 	}
 
-	ind[ind<0] <- 0
-	ind.s[ind.s<0] <- 0
-	pr <- exp(-(value(ind,values,weights)-value(ind.s,values,weights))/temp)
+	oldv <- value(ind,values,weights)
+	newv <- value(ind.s,values,weights)
+
+	if(oldv < newv) {
+		pr <- 1
+		}else{
+		pr <- exp(-(oldv-newv)/temp)
+		}
 	p[j] <- pr
 	a <- runif(1)
 	if(a < pr) ind <- ind.s
@@ -66,9 +83,39 @@ for(j in 1:ite){
 }
 
 
+
+# Results -----------------------------------------------------------------
+
 value(ind,values,weights)
 ind
-
 sum(ind*weights)
-plot(t)
-plot(sol[sol>1])
+
+
+# Graphics ----------------------------------------------------------------
+
+df <- as.data.frame(t)
+df$steps <- as.numeric(rownames(df))
+df$p <- p
+df$sol <- sol
+
+dfplot <- melt(df, id.vars = "steps", variable.name = "label")
+
+
+
+dfplot %>%
+	filter(label == "sol") %>%
+	ggplot(aes(x=steps)) +
+	geom_jitter(aes(y = value, colour = value))+
+	scale_colour_viridis(option="B",begin=0.05, end =0.99, direction = -1)	+
+	labs(x = "Time Steps", y = "Value of the Best Solution") +
+	theme_bw() +
+	theme(legend.position = "none")
+
+dfplot %>%
+	filter(label == "p") %>%
+	ggplot(aes(x=steps)) +
+	geom_jitter(aes(y = ma(value), colour = ma(value)))+
+	scale_colour_viridis(option="C",begin=0, end =1, direction = 1)	+
+	labs(x = "Time Steps", y = "Probability of Change (Moving Average)") +
+	theme_bw() +
+	theme(legend.position = "none")

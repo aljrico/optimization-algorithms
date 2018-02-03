@@ -73,3 +73,13 @@ ind
 sum(ind*weights)
 plot(t)
 plot(sol[sol>1])
+
+
+
+# Visualisation -----------------------------------------------------------
+df <- as.data.frame(t)
+df$steps <- as.numeric(rownames(df))
+df$p <- p
+
+ggplot(data = df, aes(x=steps, y = t)) +
+	geom_jitter()
