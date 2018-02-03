@@ -106,7 +106,7 @@ dfplot %>%
 	filter(label == "sol") %>%
 	ggplot(aes(x=steps)) +
 	geom_jitter(aes(y = value, colour = value))+
-	scale_colour_viridis(option="B",begin=0.05, end =0.99, direction = -1)	+
+	scale_colour_viridis(option="C",begin=0.05, end =0.99, direction = -1)	+
 	labs(x = "Time Steps", y = "Value of the Best Solution") +
 	theme_bw() +
 	theme(legend.position = "none")
@@ -117,5 +117,14 @@ dfplot %>%
 	geom_jitter(aes(y = ma(value), colour = ma(value)))+
 	scale_colour_viridis(option="C",begin=0, end =1, direction = 1)	+
 	labs(x = "Time Steps", y = "Probability of Change (Moving Average)") +
+	theme_bw() +
+	theme(legend.position = "none")
+
+dfplot %>%
+	filter(label == "t") %>%
+	ggplot(aes(x=steps)) +
+	geom_jitter(aes(y = value, colour = value))+
+	scale_colour_viridis(option="C",begin=0, end =1, direction = 1)	+
+	labs(x = "Time Steps", y = "Temperature") +
 	theme_bw() +
 	theme(legend.position = "none")
