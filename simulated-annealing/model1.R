@@ -49,13 +49,13 @@ ma <- function(arr, n=100){
 value <- function(ind, values, weights){
 	a <- sum(ind*weights)
 	if (a <= 600) b <- sum(ind*values)
-	else b <- - sum(ind*weights)^100
+	else b <- - sum(ind*weights)^10
 	return(b)
 }
 
 
 
-# Simulation  -----------------------------------------------------------------
+# Main Loop  -----------------------------------------------------------------
 
 for(j in 1:ite){
 	temp <- temp.max*(tanh(-log(j)+11) +1)*0.5
